@@ -25,7 +25,17 @@ namespace agenda_api.Controllers
             _context.Add(contato);
             _context.SaveChanges();
 
-            return Ok(contato);
+            // return Ok(contato) Retorna o contato que foi creado;
+
+            // Outro forma de retorno
+            // Informa a rota a ser usada para obter o registro que acabou de ser criado.
+            return 
+                CreatedAtAction
+                (
+                    nameof(ObterPorId),
+                    new { id = contato.Id },
+                    contato
+                );
         }
 
         [HttpGet("{id}")]
