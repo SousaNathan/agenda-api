@@ -27,5 +27,61 @@ namespace agenda_api.Controllers
 
             return Ok(contato);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult ObterPorId(int id) 
+        {
+            var contato = _context.Contatos.Find(id);
+
+            if (contato == null)
+                return NotFound();
+           
+            return Ok(contato);
+        }
+
+        [HttpGet("{nome}")]
+        public IActionResult ObterPorNome(string nome) 
+        {
+            var contatos = _context.Contatos
+                .Where(c => c.Nome.Contains(nome))
+                .ToList();
+
+            if (!contatos.Any())
+                return NotFound();
+           
+            return Ok(contatos);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarContato(int id, Contato contato)
+        {
+            var contatoBanco = _context.Contatos.Find(id);
+
+            if (contatoBanco == null)
+                return NotFound();
+
+            contatoBanco.Nome = contato.Nome;
+            contatoBanco.Telefone = contato.Telefone;
+            contatoBanco.Ativo = contato.Ativo;
+
+            _context.Contatos.Update(contatoBanco);
+            _context.SaveChanges();
+
+            return Ok(contatoBanco);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarContato(int id)
+        {
+            var contatoBanco = _context.Contatos.Find(id);
+
+            if (contatoBanco == null)
+                return NotFound();
+
+            _context.Contatos.Remove(contatoBanco);
+            _context.SaveChanges();
+
+            return NoContent(); // resposta de cucesso sem conteudo pois foi deletado;
+        }
     }
 }
